@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+
 	"github.com/amir-the-h/okex"
 	"github.com/amir-the-h/okex/events"
 	"github.com/amir-the-h/okex/events/private"

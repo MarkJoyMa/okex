@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	"github.com/amir-the-h/okex"
 	"github.com/amir-the-h/okex/api/rest"
 	"github.com/amir-the-h/okex/api/ws"

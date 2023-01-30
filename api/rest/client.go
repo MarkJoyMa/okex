@@ -7,12 +7,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/amir-the-h/okex"
-	requests "github.com/amir-the-h/okex/requests/rest/public"
-	responses "github.com/amir-the-h/okex/responses/public_data"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/amir-the-h/okex"
+	requests "github.com/amir-the-h/okex/requests/rest/public"
+	responses "github.com/amir-the-h/okex/responses/public_data"
 )
 
 // ClientRest is the rest api client
@@ -21,6 +22,7 @@ type ClientRest struct {
 	SubAccount  *SubAccount
 	Trade       *Trade
 	Funding     *Funding
+	Convert     *Convert
 	Market      *Market
 	PublicData  *PublicData
 	TradeData   *TradeData
@@ -49,6 +51,7 @@ func NewClient(apiKey, secretKey, passphrase string, baseURL okex.BaseURL, desti
 	c.Market = NewMarket(c)
 	c.PublicData = NewPublicData(c)
 	c.TradeData = NewTradeData(c)
+	c.Convert = NewConvert(c)
 	return c
 }
 

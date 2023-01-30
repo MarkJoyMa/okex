@@ -7,12 +7,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/amir-the-h/okex"
-	"github.com/amir-the-h/okex/events"
-	"github.com/gorilla/websocket"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/amir-the-h/okex"
+	"github.com/amir-the-h/okex/events"
+	"github.com/gorilla/websocket"
 )
 
 // ClientWs is the websocket api client

@@ -3,9 +3,10 @@ package market
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/amir-the-h/okex"
 	"strconv"
 	"time"
+
+	"github.com/amir-the-h/okex"
 )
 
 type (
@@ -24,7 +25,7 @@ type (
 		Vol24h    okex.JSONFloat64    `json:"vol24h"`
 		SodUtc0   okex.JSONFloat64    `json:"sodUtc0"`
 		SodUtc8   okex.JSONFloat64    `json:"sodUtc8"`
-		InstType  okex.InstrumentType `json:"instType,string"`
+		InstType  okex.InstrumentType `json:"instType,omitempty"`
 		TS        okex.JSONTime       `json:"ts"`
 	}
 	IndexTicker struct {
@@ -55,13 +56,15 @@ type (
 		OrderNumbers    int
 	}
 	Candle struct {
-		O      float64
-		H      float64
-		L      float64
-		C      float64
-		Vol    float64
-		VolCcy float64
-		TS     okex.JSONTime
+		O           float64
+		H           float64
+		L           float64
+		C           float64
+		Vol         float64
+		VolCcy      float64
+		VolCcyQuote float64
+		Confirm     bool
+		TS          okex.JSONTime
 	}
 	IndexCandle struct {
 		O  float64
@@ -134,10 +137,11 @@ func (o *OrderBookEntity) UnmarshalJSON(buf []byte) error {
 
 func (c *Candle) UnmarshalJSON(buf []byte) error {
 	var (
-		o, h, l, cl, vol, volCcy, ts string
-		err                          error
+		o, h, l, cl, vol, volCcy, ts, volCcyQuote, confirm string
+		err                                                error
 	)
-	tmp := []interface{}{&ts, &o, &h, &l, &cl, &vol, &volCcy}
+
+	tmp := []interface{}{&ts, &o, &h, &l, &cl, &vol, &volCcy, &volCcyQuote, &confirm}
 	wantLen := len(tmp)
 	if err := json.Unmarshal(buf, &tmp); err != nil {
 		return err
@@ -146,7 +150,6 @@ func (c *Candle) UnmarshalJSON(buf []byte) error {
 	if g, e := len(tmp), wantLen; g != e {
 		return fmt.Errorf("wrong number of fields in Candle: %d != %d", g, e)
 	}
-
 	timestamp, err := strconv.ParseInt(ts, 10, 64)
 	if err != nil {
 		return err
@@ -179,6 +182,16 @@ func (c *Candle) UnmarshalJSON(buf []byte) error {
 	}
 
 	c.VolCcy, err = strconv.ParseFloat(volCcy, 64)
+	if err != nil {
+		return err
+	}
+
+	c.VolCcyQuote, err = strconv.ParseFloat(volCcyQuote, 64)
+	if err != nil {
+		return err
+	}
+
+	c.Confirm, err = strconv.ParseBool(confirm)
 	if err != nil {
 		return err
 	}
